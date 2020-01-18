@@ -1,0 +1,11 @@
+---
+# tasks file for server
+- name: Install base Packages
+  apt: pkg={{item}} state=latest
+  with_items:
+    - gnupg2
+    - python-apt
+    - mysql-server
+    - mysql-client
+    - python-mysqldb
+  become: yes

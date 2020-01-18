@@ -1,0 +1,11 @@
+---
+# tasks file for mysql
+- name: Ensure MySQL database is present
+  mysql_db: login_user=root login_password={{root_pwd}} name={{db}} state=present
+  become: yes
+
+- name: Ensure MySQL user is present
+  mysql_user: >
+    login_user=root login_password={{root_pwd}} name={{user}} password={{pwd}}
+    priv={{db}}.*:ALL state=present
+  become: yes

@@ -1,0 +1,12 @@
+---
+# tasks file for wp-cli
+- name: Install WP-CLI
+  shell: >
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    && mv wp-cli.phar /usr/local/bin/wp
+    creates=/usr/local/bin/wp
+  become: yes
+
+- name: Ensure WP-CLI permissions
+  file: path=/usr/local/bin/wp state=file mode=755
+  become: yes

@@ -1,0 +1,6 @@
+---
+# vars file for mysql
+root_pwd: Your-root-pwd
+db: your-db-name
+user: your-db-user
+pwd: your-db-pwd

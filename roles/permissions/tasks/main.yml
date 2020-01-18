@@ -1,0 +1,17 @@
+---
+# tasks file for permissions
+- name: Set the correct permissions on Wordpress directories
+  command: find {{root_directory}} -type d -exec chmod 755 {} \;
+  become: yes
+
+- name: Set the correct permission for Wordpress files
+  command: find {{root_directory}} -type f -exec chmod 644 {} \;
+  become: yes
+
+- name: Set the correct permissions for Wordpress wp-config file
+  command: find {{root_directory}}/wp-config.php -type f -exec chmod 440 {} \;
+  become: yes
+
+- name: Set Wordpress directory owner
+  file: path={{root_directory}} state=directory group=www-data owner=www-data mode=u=rwX,g=rX,o=rX recurse=yes
+  become: yes

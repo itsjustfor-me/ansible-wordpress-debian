@@ -1,0 +1,68 @@
+---
+# tasks file for wordpress
+- name: Create Wordpress directory
+  file: path={{root_directory}} state=directory group=www-data owner=www-data mode=0777
+  become: yes
+
+- name: Download Wordpress
+  become: www-data
+  command: wp core download chdir={{root_directory}} creates={{root_directory}}/index.php
+
+- name: Ensure wp-content is world writeable
+  file: path={{root_directory}}/wp-content state=directory mode=755 recurse=yes
+  become: yes
+
+- name: Create Worpress configuration
+  command: >
+    wp core config --dbname={{db}} --dbuser={{user}} --dbpass={{pwd}} --locale={{locale}}
+    chdir={{root_directory}} creates={{root_directory}}/wp-config.php
+  become: www-data
+
+- name: Ensure FS_METHOD is set to direct
+  lineinfile: >
+    dest={{root_directory}}/wp-config.php line="define('FS_METHOD', 'direct');"
+    insertafter="^define\('WPLANG'"
+    state=present
+
+- name: Set Wordpress debugging
+  lineinfile: >
+    dest={{root_directory}}/wp-config.php line="define('WP_DEBUG', true); define('WP_DEBUG_LOG', true);"
+    insertafter="^define\('FS_METHOD'"
+    state=present
+  when: "{{ debug }}"
+
+- name: Install Wordpress
+  command: >
+    wp core install --url={{url}} --title="{{title}}" --admin_user={{admin_user}} --admin_password={{admin_pwd}}
+    --admin_email={{admin_email}} chdir={{root_directory}}
+  become: www-data
+
+- name: Check if Wordpress is already installed
+  command: wp core is-installed chdir={{root_directory}}
+  register: wordpress_is_installed
+
+- name: Install Wordpress-Theme
+  command: wp theme install {{theme_name}} chdir={{root_directory}}
+  become: www-data
+
+- name: Activate theme
+  command: wp theme activate {{theme_name}} chdir={{root_directory}}
+
+- name: Install Wordpress Plugin wp-force-login
+  command: wp plugin install {{plugin_name1}} --activate chdir={{root_directory}}
+  become: www-data
+
+- name: Install WordPress plugin prismatic
+  command: wp plugin install {{plugin_name2}} --activate chdir={{root_directory}}
+
+- name: Install WordPress plugin antispam-bee
+  command: wp plugin install {{plugin_name3}} --activate chdir={{root_directory}}
+
+- name: Install WordPress plugin limit-login-attempts-reloaded
+  command: wp plugin install {{plugin_name4}} --activate chdir={{root_directory}}
+
+- name: Delete HelloDolly Plugin
+  command: wp plugin delete {{delplugin_name1}} chdir={{root_directory}}
+
+- name: Delete Akismet Plugin
+  command: wp plugin delete {{delplugin_name2}} chdir={{root_directory}}

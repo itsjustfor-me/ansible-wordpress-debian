@@ -1,0 +1,17 @@
+---
+# vars file for wordpress
+root_directory: /path/to/your/installation
+theme_name: your-theme-name
+plugin_name1: wp-force-login
+plugin_name2: prismatic
+plugin_name3: antispam-bee
+plugin_name4: limit-login-attempts-reloaded
+delplugin_name1: hello
+delplugin_name2: akismet
+locale: de_DE
+url: http://yourdomain.de
+title: Your Title
+admin_user: your_admin_user
+admin_pwd: your_admin_pwd
+admin_email: youradmin@email.address
+debug: true
